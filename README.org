@@ -1,0 +1,27 @@
+I woke up this morning with an idea for a progressive Huffman encoding
+for LArTPC data based on extracting local median baselines.
+
+Like most dream-oriented programming paradigms, this doesn't seem to
+pan out.
+
+The idea derives from a known trick to encode not direct ADC values
+but to first take the difference between sample N and N+1 and encode
+that.  This effectively removes the highest frequency noise from the
+resulting codes and so their entropy is reduced.  Eg, in one example
+noise, the entropy goes from 8.084 bits for direct encoding to 7.655
+bits for differential encoding.  With standard Huffman encoding,
+including the codebook, this translates to an increase in the
+compression factor from 10.6 to 11.5.  Note, these absolute values are
+very sensitive to the particular waveforms.
+
+The dreamy thinking was to somehow extend down from the very highest
+frequency to a bit lower, but still above the frequencies where most
+noise and signal dominate.
+
+By chunking a waveform into, say, N pieces we effectively apply a
+high-pass filter.  From each chunk we might extract a representative
+value, the median, and withing the chunk encode the values with this
+representative value removed.  We then would have one representative
+value for each chunk forming a more coarse waveform (the progressive
+part of the dream).
+
